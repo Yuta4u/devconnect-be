@@ -21,7 +21,7 @@ const createController = (req, res) => {
       expiresIn: "1h",
     })
 
-    const url = `http://localhost:3000/api/recruiter/activate/${token}`
+    const url = `https://devconnect-be.vercel.app/api/recruiter/activate/${token}`
 
     const mailOptions = {
       from: process.env.EMAIL,
