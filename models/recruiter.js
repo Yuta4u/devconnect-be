@@ -26,8 +26,7 @@ const validationEmail = (email, callback) => {
 }
 
 const create = (data, callback) => {
-  const { email, password, profile_img, description, company_name, employee } =
-    data
+  const { email, password, company_name } = data
   const hashedPassword = bcrypt.hashSync(password, 10)
   const img =
     profile_img ||
@@ -45,10 +44,10 @@ const create = (data, callback) => {
     } else {
       // Email does not exist, proceed with insertion
       const querySql =
-        "INSERT INTO recruiter (email, password, profile_img, description, company_name, employee) VALUES (?, ?, ?, ?, ?, ?)"
+        "INSERT INTO recruiter (email, password, company_name) VALUES (?, ?, ?)"
       db.query(
         querySql,
-        [email, hashedPassword, img, description, company_name, employee],
+        [email, hashedPassword, company_name],
         (error, results) => {
           if (error) {
             return callback(error)
