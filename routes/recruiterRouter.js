@@ -8,7 +8,7 @@ const {
   findAllController,
 } = require("../controllers/recruiterController")
 
-router.get("/email-validation", validationEmailController)
+router.post("/email-validation", validationEmailController)
 router.post("/register", createController)
 router.get("/activate/:token", activateController)
 router.post("/login", loginController)
