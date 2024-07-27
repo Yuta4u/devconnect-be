@@ -123,6 +123,7 @@ const findAll = (callback) => {
     "SELECT `recruiter_id`, `email`, `profile_img`, `description`, `company_name`, `employee` FROM `recruiter`"
   db.query(querySql, (error, results) => {
     if (error) {
+      console.log(error, "ini error")
       return callback({ status: 500, msg: error })
     }
     callback(null, { status: 201, data: results })

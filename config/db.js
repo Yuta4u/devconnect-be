@@ -1,12 +1,12 @@
 const mysql = require("mysql2")
-const fs = require("fs")
 
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+  // development
+  host: "gateway01.ap-southeast-1.prod.aws.tidbcloud.com",
+  port: 4000,
+  user: "37Eb2NWFGCvQuns.root",
+  password: "2oqHIQ7VoHe0Zlw2",
+  database: "devconnect",
   ssl: {
     rejectUnauthorized: true,
   },
