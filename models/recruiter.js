@@ -28,9 +28,9 @@ const validationEmail = (email, callback) => {
 const create = (data, callback) => {
   const { email, password, company_name } = data
   const hashedPassword = bcrypt.hashSync(password, 10)
-  const img =
-    profile_img ||
-    "https://t4.ftcdn.net/jpg/04/72/34/21/360_F_472342109_w3xPTE23Vehlk6C3eQLas4cuyrzrVc01.jpg"
+  // const img =
+  //   profile_img ||
+  //   "https://t4.ftcdn.net/jpg/04/72/34/21/360_F_472342109_w3xPTE23Vehlk6C3eQLas4cuyrzrVc01.jpg"
 
   // Check if email already exists
   const querySqlEmail = "SELECT * FROM recruiter WHERE email = ?"
