@@ -1,6 +1,7 @@
 const db = require("../config/db")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const nodemailer = require("nodemailer")
 
 const validationEmail = (email, callback) => {
   const querySql = `SELECT * FROM recruiter WHERE email = ?`
@@ -26,11 +27,8 @@ const validationEmail = (email, callback) => {
 }
 
 const create = (data, callback) => {
-  const { email, password, company_name } = data
+  const { email, company_name, password } = data
   const hashedPassword = bcrypt.hashSync(password, 10)
-  // const img =
-  //   profile_img ||
-  //   "https://t4.ftcdn.net/jpg/04/72/34/21/360_F_472342109_w3xPTE23Vehlk6C3eQLas4cuyrzrVc01.jpg"
 
   // Check if email already exists
   const querySqlEmail = "SELECT * FROM recruiter WHERE email = ?"
@@ -52,6 +50,34 @@ const create = (data, callback) => {
           if (error) {
             return callback(error)
           }
+
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.EMAIL,
+              pass: process.env.EMAIL_PASSWORD,
+            },
+          })
+
+          const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+          })
+
+          const url = `https://devconnect-be.vercel.app/api/recruiter/activate/${token}`
+
+          const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Verify your email",
+            text: `Click on this link to verify your email: ${url}`,
+          }
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return res.status(500).send("Email sending failed: " + error)
+            }
+          })
+
           callback(null, {
             status: 201,
             msg: "Registration successful! Please check your email to verify your account.",
@@ -123,7 +149,6 @@ const findAll = (callback) => {
     "SELECT `recruiter_id`, `email`, `profile_img`, `description`, `company_name`, `employee` FROM `recruiter`"
   db.query(querySql, (error, results) => {
     if (error) {
-      console.log(error, "ini error")
       return callback({ status: 500, msg: error })
     }
     callback(null, { status: 201, data: results })
