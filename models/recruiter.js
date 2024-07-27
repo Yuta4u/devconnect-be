@@ -2,6 +2,29 @@ const db = require("../config/db")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
+const validationEmail = (email, callback) => {
+  const querySql = `SELECT * FROM recruiter WHERE email = ?`
+  db.query(querySql, [email], (error, results) => {
+    if (error) {
+      return callback({
+        status: 500,
+        msg: "db error from validation email api",
+      })
+    }
+    if (results.length !== 0) {
+      callback(null, {
+        status: 201,
+        msg: "email already registered",
+      })
+    } else if (results.length === 0) {
+      callback(null, {
+        status: 201,
+        msg: "email is avaible to use",
+      })
+    }
+  })
+}
+
 const create = (data, callback) => {
   const { email, password, profile_img, description, company_name, employee } =
     data
@@ -107,4 +130,4 @@ const findAll = (callback) => {
   })
 }
 
-module.exports = { create, login, activate, findAll }
+module.exports = { validationEmail, create, login, activate, findAll }

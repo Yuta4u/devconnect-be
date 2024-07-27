@@ -1,4 +1,10 @@
-const { create, login, activate, findAll } = require("../models/recruiter")
+const {
+  validationEmail,
+  create,
+  login,
+  activate,
+  findAll,
+} = require("../models/recruiter")
 const nodemailer = require("nodemailer")
 const jwt = require("jsonwebtoken")
 
@@ -9,6 +15,16 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 })
+
+const validationEmailController = (req, res) => {
+  const { email } = req.body
+  validationEmail(email, (error, results) => {
+    if (error) {
+      return res.status(500).send(error)
+    }
+    res.status(200).send(results)
+  })
+}
 
 const createController = (req, res) => {
   const { email } = req.body
@@ -76,6 +92,7 @@ const findAllController = (_, res) => {
 }
 
 module.exports = {
+  validationEmailController,
   createController,
   loginController,
   activateController,
