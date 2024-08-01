@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
 const create = (data, callback) => {
-  const { username, email, password, role } = data
+  const { username, email, password } = data
   const hashedPassword = bcrypt.hashSync(password, 10)
 
   // Check if email already exists
@@ -18,10 +18,10 @@ const create = (data, callback) => {
     } else {
       // Email does not exist, proceed with insertion
       const querySql =
-        "INSERT INTO dev (username, email, password, role) VALUES (?, ?, ?, ?)"
+        "INSERT INTO dev (username, email, password) VALUES (?, ?, ?)"
       db.query(
         querySql,
-        [username, email, hashedPassword, role],
+        [username, email, hashedPassword],
         (error, results) => {
           if (error) {
             return callback(error)
@@ -89,7 +89,7 @@ const activate = (email, callback) => {
 
 const findAll = (callback) => {
   const querySql =
-    "SELECT `dev_id`, `email`, `role`, `skill`, `linkedin`, `profile_img`, `created_at` FROM `dev`"
+    "SELECT `dev_id`, `username`, `email`, `role`, `skill`, `linkedin`, `profile_img`, `created_at` FROM `dev`"
   db.query(querySql, (error, results) => {
     if (error) {
       return callback({ status: 500, msg: error })
