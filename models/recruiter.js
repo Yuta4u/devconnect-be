@@ -31,13 +31,18 @@ const create = (data, callback) => {
   const hashedPassword = bcrypt.hashSync(password, 10)
 
   // Check if email already exists
-  const querySqlEmail =
-    "SELECT * FROM dev WHERE email = ? UNION SELECT * FROM recruiter recruiter WHERE email = ?"
+  const querySqlEmail = `SELECT CASE
+    WHEN EXISTS (SELECT 1 FROM dev WHERE email = ?)
+    OR EXISTS (SELECT 1 FROM recruiter WHERE email = ?)
+    THEN 'Email found'
+    ELSE 'Email not found'
+    END AS result
+  `
   db.query(querySqlEmail, [email, email], (error, results) => {
     if (error) {
       return callback({ status: 500, msg: error })
     }
-    if (results.length > 0) {
+    if (results === "Email found") {
       // Email already exists
       return callback({ status: 400, msg: "Email already in use" })
     } else {
