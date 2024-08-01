@@ -3,11 +3,8 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
 const create = (data, callback) => {
-  const { email, password, role, skill, linkedin, profileImg } = data
+  const { username, email, password, role } = data
   const hashedPassword = bcrypt.hashSync(password, 10)
-  const img =
-    profileImg ||
-    "https://t4.ftcdn.net/jpg/04/72/34/21/360_F_472342109_w3xPTE23Vehlk6C3eQLas4cuyrzrVc01.jpg"
 
   // Check if email already exists
   const querySqlEmail = "SELECT * FROM dev WHERE email = ?"
@@ -21,10 +18,10 @@ const create = (data, callback) => {
     } else {
       // Email does not exist, proceed with insertion
       const querySql =
-        "INSERT INTO dev (email, password, role, skill, linkedin, profile_img) VALUES (?, ?, ?, ?, ?, ?)"
+        "INSERT INTO dev (username, email, password, role) VALUES (?, ?, ?, ?)"
       db.query(
         querySql,
-        [email, hashedPassword, role, skill, linkedin, img],
+        [username, email, hashedPassword, role],
         (error, results) => {
           if (error) {
             return callback(error)
@@ -67,6 +64,7 @@ const login = (data, callback) => {
       data: {
         user: {
           id: user.dev_id,
+          username: dev.username,
           email: user.email,
           role: user.role,
           skill: user.skill,
