@@ -31,8 +31,12 @@ const create = (data, callback) => {
   const hashedPassword = bcrypt.hashSync(password, 10)
 
   // Check if email already exists
-  const querySqlEmail = "SELECT * FROM recruiter WHERE email = ?"
-  db.query(querySqlEmail, [email], (error, results) => {
+  const querySqlEmail = `
+  SELECT * FROM dev WHERE email = ?
+  UNION
+  SELECT * FROM recruiter WHERE email = ?
+`
+  db.query(querySqlEmail, [email, email], (error, results) => {
     if (error) {
       return callback({ status: 500, msg: error })
     }

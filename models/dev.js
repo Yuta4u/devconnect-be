@@ -6,17 +6,22 @@ const create = (data, callback) => {
   const { username, email, password } = data
   const hashedPassword = bcrypt.hashSync(password, 10)
 
-  // Check if email already exists
-  const querySqlEmail = "SELECT * FROM dev WHERE email = ?"
-  db.query(querySqlEmail, [email], (error, results) => {
+  // Check if email already exists in either dev or recruiter table
+  const querySqlEmail = `
+    SELECT * FROM dev WHERE email = ?
+    UNION
+    SELECT * FROM recruiter WHERE email = ?
+  `
+
+  db.query(querySqlEmail, [email, email], (error, results) => {
     if (error) {
       return callback({ status: 500, msg: error })
     }
     if (results.length > 0) {
-      // Email already exists
+      // Email already exists in either table
       return callback({ status: 400, msg: "Email already in use" })
     } else {
-      // Email does not exist, proceed with insertion
+      // Email does not exist, proceed with insertion into dev table
       const querySql =
         "INSERT INTO dev (username, email, password) VALUES (?, ?, ?)"
       db.query(
