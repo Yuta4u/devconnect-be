@@ -46,7 +46,7 @@ const login = (data, callback) => {
   const querySql = "SELECT * FROM dev WHERE email = ?"
   db.query(querySql, [email], (error, results) => {
     if (error) {
-      return callback({ status: 500, error: error })
+      return callback({ status: 500, error: "Akun tidak terdaftar" })
     }
     if (results.length === 0) {
       return callback({ status: 400, error: "Email or password is incorrect" })
@@ -55,6 +55,12 @@ const login = (data, callback) => {
     const passwordIsValid = bcrypt.compareSync(password, user.password)
     if (!passwordIsValid) {
       return callback({ status: 400, error: "Email or password is incorrect" })
+    }
+    if (!user.is_active) {
+      return callback({
+        status: 402,
+        error: "Your account has not been activated",
+      })
     }
     const token = jwt.sign(
       { id: user.dev_id, email: user.email },
