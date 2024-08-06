@@ -73,15 +73,15 @@ const login = (data, callback) => {
     callback(null, {
       status: 200,
       data: {
-        user: {
-          id: user.dev_id,
-          username: dev.username,
-          email: user.email,
-          role: user.role,
-          skill: user.skill,
-          linkedin: user.linkedin,
-          profileImg: user.profile_img,
-        },
+        // user: {
+        //   id: user.dev_id,
+        //   username: user.username,
+        //   email: user.email,
+        //   role: user.role,
+        //   skill: user.skill,
+        //   linkedin: user.linkedin,
+        //   profileImg: user.profile_img,
+        // },
         token,
       },
     })

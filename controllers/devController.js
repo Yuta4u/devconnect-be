@@ -42,10 +42,7 @@ const createController = (req, res) => {
 const loginController = (req, res) => {
   login(req.body, (error, results) => {
     if (error) {
-      return res.status(500).send({
-        status: 500,
-        msg: error,
-      })
+      return error
     }
     res.status(200).send(results)
   })
