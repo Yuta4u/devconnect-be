@@ -44,7 +44,7 @@ const loginController = (req, res) => {
     if (error) {
       return res.status(500).send({
         status: 500,
-        msg: "database error",
+        msg: error,
       })
     }
     res.status(200).send(results)
