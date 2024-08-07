@@ -2,11 +2,14 @@ const mysql = require("mysql2")
 const fs = require("fs")
 
 const db = mysql.createConnection({
-  host: "bre4zmod0fcatv29clcl-mysql.services.clever-cloud.com",
-  port: 3306,
-  user: "usano2gpmsd3wawx",
-  password: "faRv62qNtbgzbpIkokST",
-  database: "bre4zmod0fcatv29clcl",
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  ssl: {
+    rejectUnauthorized: true,
+  },
 })
 
 db.connect((err) => {
